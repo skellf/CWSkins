@@ -39,7 +39,7 @@ public class ApplySkinListener implements Listener {
                 }
 
                 if (skin != null && skinName != null) {
-                    if (clickedItem.getType() == skin.getMaterial() && !clickedItem.getItemMeta().hasCustomModelData() && !clickedItem.getItemMeta().getPersistentDataContainer().has(CustomSkin.APPLIED_SKIN_KEY, PersistentDataType.STRING)) {
+                    if (clickedItem.getType() == skin.getMaterial() && !clickedItem.getItemMeta().hasCustomModelData() && !clickedItem.getItemMeta().getPersistentDataContainer().has(CustomSkin.APPLIED_SKIN_KEY, PersistentDataType.STRING) && !clickedItem.getItemMeta().getPersistentDataContainer().has(CustomSkin.CLEAR_SKIN_KEY)) {
                         long lastApplyTime = lastSkinApplyTime.getOrDefault(player.getUniqueId(), 0L);
                         long currentTime = System.currentTimeMillis();
                         if (currentTime - lastApplyTime >= 5000) {
