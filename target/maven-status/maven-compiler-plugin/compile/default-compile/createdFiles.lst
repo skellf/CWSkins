@@ -1,0 +1,8 @@
+me\skellf\cwskins\listeners\PreventSkinUse.class
+me\skellf\cwskins\commands\skin\GiveSkinCommand.class
+me\skellf\cwskins\listeners\ApplySkinListener.class
+me\skellf\cwskins\listeners\DamageListener.class
+me\skellf\cwskins\commands\skin\ClearSkinCommand.class
+me\skellf\cwskins\CustomSkin.class
+me\skellf\cwskins\CWSkins.class
+me\skellf\cwskins\commands\skin\CreateSkinCommand.class
