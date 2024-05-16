@@ -23,11 +23,25 @@ public class ApplySkinListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        Player player = (Player) event.getWhoClicked();
         ItemStack cursorItem = event.getCursor();
         ItemStack clickedItem = event.getCurrentItem();
         if (cursorItem != null && clickedItem != null && event.getClickedInventory() != null && cursorItem.getType() != Material.AIR && clickedItem.getType() != Material.AIR) {
             ItemMeta cursorMeta = cursorItem.getItemMeta();
+            if (cursorMeta != null && cursorMeta.getPersistentDataContainer().has(CustomSkin.CLEAR_SKIN_KEY, PersistentDataType.STRING)) {
+                if (!clickedItem.getItemMeta().getPersistentDataContainer().has(CustomSkin.CUSTOM_SKIN_KEY, PersistentDataType.STRING) && clickedItem.getItemMeta().getPersistentDataContainer().has(CustomSkin.APPLIED_SKIN_KEY)) {
+                    Player player = (Player) event.getWhoClicked();
+                    long lastClearTime = lastSkinClearTime.getOrDefault(player.getUniqueId(), 0L);
+                    long currentTime = System.currentTimeMillis();
+                    if (currentTime - lastClearTime >= 20000) {
+                        clearSkin(clickedItem, player, cursorItem);
+                        event.setCancelled(true);
+                    } else {
+                        player.sendMessage(MiniMessage.miniMessage().deserialize(" <gray>|</gray> <red>Подождите <bold>20</bold> секунд перед очисткой скина.</red>"));
+                    }
+                    return;
+                }
+            }
+
             if (cursorMeta != null && cursorMeta.getPersistentDataContainer().has(CustomSkin.CUSTOM_SKIN_KEY, PersistentDataType.STRING)) {
                 String skinName = cursorMeta.getPersistentDataContainer().get(CustomSkin.CUSTOM_SKIN_KEY, PersistentDataType.STRING);
                 CustomSkin skin;
@@ -39,34 +53,49 @@ public class ApplySkinListener implements Listener {
                 }
 
                 if (skin != null && skinName != null) {
-                    if (clickedItem.getType() == skin.getMaterial() && !clickedItem.getItemMeta().hasCustomModelData() && !clickedItem.getItemMeta().getPersistentDataContainer().has(CustomSkin.APPLIED_SKIN_KEY, PersistentDataType.STRING) && !clickedItem.getItemMeta().getPersistentDataContainer().has(CustomSkin.CLEAR_SKIN_KEY)) {
-                        long lastApplyTime = lastSkinApplyTime.getOrDefault(player.getUniqueId(), 0L);
-                        long currentTime = System.currentTimeMillis();
-                        if (currentTime - lastApplyTime >= 5000) {
-                            lastSkinApplyTime.put(player.getUniqueId(), currentTime);
-                            ItemMeta clickedItemMeta = clickedItem.getItemMeta();
-                            clickedItemMeta.setCustomModelData(skin.getCustomModelData());
-                            clickedItemMeta.getPersistentDataContainer().set(CustomSkin.APPLIED_SKIN_KEY, PersistentDataType.STRING, skinName);
-                            clickedItem.setItemMeta(clickedItemMeta);
-
-                            event.setCursor(null);
-                            event.setCancelled(true);
-                        } else {
-                            player.sendMessage(MiniMessage.miniMessage().deserialize(" <gray>|</gray> <red>Подождите <bold>5</bold> секунд перед применением скина.</red>"));
-                        }
-                    } else {
-                        if (clickedItem.getItemMeta() != null && clickedItem.getItemMeta().getPersistentDataContainer().has(CustomSkin.CLEAR_SKIN_KEY, PersistentDataType.STRING)) {
-                            long lastClearTime = lastSkinClearTime.getOrDefault(player.getUniqueId(), 0L);
+                    Player player = (Player) event.getWhoClicked();
+                    if (!clickedItem.getItemMeta().getPersistentDataContainer().has(CustomSkin.APPLIED_SKIN_KEY, PersistentDataType.STRING) && !clickedItem.getItemMeta().getPersistentDataContainer().has(CustomSkin.CLEAR_SKIN_KEY)) {
+                        if (!clickedItem.getItemMeta().getPersistentDataContainer().has(CustomSkin.CUSTOM_SKIN_KEY, PersistentDataType.STRING)) {
+                            UUID playerId = event.getWhoClicked().getUniqueId();
+                            long lastApplyTime = lastSkinApplyTime.getOrDefault(playerId, 0L);
                             long currentTime = System.currentTimeMillis();
-                            if (currentTime - lastClearTime >= 20000){
-                                lastSkinClearTime.put(player.getUniqueId(), currentTime);
-                                clearSkin(clickedItem, player);
-
+                            if (currentTime - lastApplyTime >= 5000) {
+                                applySkin(clickedItem, skin, skinName, player);
                                 event.setCursor(null);
                                 event.setCancelled(true);
                             } else {
-                                player.sendMessage(MiniMessage.miniMessage().deserialize(" <gray>|</gray> <red>Подождите <bold>20</bold> секунд перед применением скина.</red>"));
+                                player.sendMessage(MiniMessage.miniMessage().deserialize(" <gray>|</gray> <red>Подождите <bold>5</bold> секунд перед применением скина.</red>"));
                             }
+                        } else {
+                            player.sendMessage(MiniMessage.miniMessage().deserialize(" <gray>|</gray> <red>На этом предмете уже применен другой скин.</red>"));
+                        }
+                    }
+                    return;
+                }
+            }
+
+            ItemMeta clickedMeta = clickedItem.getItemMeta();
+            if (clickedMeta != null && clickedMeta.getPersistentDataContainer().has(CustomSkin.CUSTOM_SKIN_KEY, PersistentDataType.STRING)) {
+                String skinName = clickedMeta.getPersistentDataContainer().get(CustomSkin.CUSTOM_SKIN_KEY, PersistentDataType.STRING);
+                CustomSkin skin;
+                try {
+                    skin = CustomSkin.fromFile(CWSkins.getSkinFile(skinName));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return;
+                }
+
+                if (skin != null && skinName != null) {
+                    Player player = (Player) event.getWhoClicked();
+                    if (clickedItem.getType() == skin.getMaterial() && !clickedItem.getItemMeta().hasCustomModelData() && !clickedItem.getItemMeta().getPersistentDataContainer().has(CustomSkin.APPLIED_SKIN_KEY, PersistentDataType.STRING)) {
+                        UUID playerId = event.getWhoClicked().getUniqueId();
+                        long lastApplyTime = lastSkinApplyTime.getOrDefault(playerId, 0L);
+                        long currentTime = System.currentTimeMillis();
+                        if (currentTime - lastApplyTime >= 5000) {
+                            applySkin(clickedItem, skin, skinName, player);
+                            event.setCancelled(true);
+                        } else {
+                            player.sendMessage(MiniMessage.miniMessage().deserialize(" <gray>|</gray> <red>Подождите <bold>5</bold> секунд перед применением скина.</red>"));
                         }
                     }
                 }
@@ -74,20 +103,36 @@ public class ApplySkinListener implements Listener {
         }
     }
 
-    private void clearSkin(ItemStack item, Player player){
-        ItemMeta meta = item.getItemMeta();
 
-        if (meta != null && meta.getPersistentDataContainer().has(CustomSkin.APPLIED_SKIN_KEY, PersistentDataType.STRING)){
-            meta.setCustomModelData(null);
-            giveSkin(item, player);
-            meta.getPersistentDataContainer().remove(CustomSkin.APPLIED_SKIN_KEY);
-            item.setItemMeta(meta);
+    private void clearSkin(ItemStack item, Player player, ItemStack cursor) {
+        lastSkinClearTime.put(player.getUniqueId(), System.currentTimeMillis());
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null && meta.getPersistentDataContainer().has(CustomSkin.APPLIED_SKIN_KEY, PersistentDataType.STRING) && !meta.getPersistentDataContainer().has(CustomSkin.CUSTOM_SKIN_KEY, PersistentDataType.STRING)) {
+            String skinName = meta.getPersistentDataContainer().get(CustomSkin.APPLIED_SKIN_KEY, PersistentDataType.STRING);
+            CustomSkin skin = null;
+
+            try {
+                skin = CustomSkin.fromFile(CWSkins.getSkinFile(skinName));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (skin != null && skinName != null) {
+                meta.setCustomModelData(null);
+                giveSkin(skinName, player);
+                meta.getPersistentDataContainer().remove(CustomSkin.APPLIED_SKIN_KEY);
+                item.setItemMeta(meta);
+            }
+
+            if (cursor.getAmount() > 1) {
+                cursor.setAmount(cursor.getAmount() - 1);
+            } else {
+                player.setItemOnCursor(null);
+            }
         }
     }
 
-    private void giveSkin(ItemStack item, Player player) {
-        ItemMeta meta = item.getItemMeta();
-        String skinName = meta.getPersistentDataContainer().get(CustomSkin.APPLIED_SKIN_KEY, PersistentDataType.STRING);
+    private void giveSkin(String skinName, Player player) {
         CustomSkin skin = null;
 
         try {
@@ -110,4 +155,22 @@ public class ApplySkinListener implements Listener {
         }
     }
 
+    private void applySkin(ItemStack item, CustomSkin skin, String skinName, Player player) {
+        if (item.getType() != skin.getMaterial()) {
+            player.sendMessage(MiniMessage.miniMessage().deserialize(" <gray>|</gray> <red>Нельзя применить этот скин на данный предмет.</red>"));
+            return;
+        }
+
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null && !meta.getPersistentDataContainer().has(CustomSkin.CUSTOM_SKIN_KEY, PersistentDataType.STRING)) {
+            meta.setCustomModelData(skin.getCustomModelData());
+            meta.getPersistentDataContainer().set(CustomSkin.APPLIED_SKIN_KEY, PersistentDataType.STRING, skinName);
+            item.setItemMeta(meta);
+            lastSkinApplyTime.put(player.getUniqueId(), System.currentTimeMillis());
+
+            player.setItemOnCursor(null);
+        } else {
+            player.sendMessage(MiniMessage.miniMessage().deserialize(" <gray>|</gray> <red>На этом предмете уже применен скин или уже применен другой скин.</red>"));
+        }
+    }
 }
