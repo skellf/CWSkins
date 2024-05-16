@@ -41,7 +41,7 @@ public class ClearSkinCommand implements CommandExecutor {
         ItemMeta meta = clearSkinItem.getItemMeta();
         meta.setDisplayName("§x§D§1§6§C§1§3Снятие скина");
         lore.add("");
-        lore.add(" §8▪ §fПеретащите этот предмет");
+        lore.add("§8▪ §fПеретащите этот предмет");
         lore.add("  §fна скин, чтобы снять его");
         meta.setLore(lore);
         meta.getPersistentDataContainer().set(CustomSkin.CLEAR_SKIN_KEY, PersistentDataType.STRING, "clear");
