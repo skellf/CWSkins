@@ -58,7 +58,7 @@ public class ApplySkinListener implements Listener {
                         if (clickedItem.getItemMeta() != null && clickedItem.getItemMeta().getPersistentDataContainer().has(CustomSkin.CLEAR_SKIN_KEY, PersistentDataType.STRING)) {
                             long lastClearTime = lastSkinClearTime.getOrDefault(player.getUniqueId(), 0L);
                             long currentTime = System.currentTimeMillis();
-                            if (lastClearTime - currentTime >= 20000){
+                            if (currentTime - lastClearTime >= 20000){
                                 lastSkinClearTime.put(player.getUniqueId(), currentTime);
                                 clearSkin(clickedItem, player);
 
