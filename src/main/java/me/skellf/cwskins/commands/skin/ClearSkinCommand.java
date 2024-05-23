@@ -1,6 +1,8 @@
 package me.skellf.cwskins.commands.skin;
 
+import me.skellf.cwskins.CWSkins;
 import me.skellf.cwskins.CustomSkin;
+import me.skellf.cwskins.util.ColorTranslate;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -22,7 +24,12 @@ public class ClearSkinCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length != 1){
-            sender.sendMessage(mm.deserialize("<red>Введите имя игрока!</red>"));
+            sender.sendMessage(mm.deserialize(CWSkins.getInstance().getMessage("clearkincommand.noPlayerName")));
+            return true;
+        }
+
+        if (!sender.hasPermission("cwskins.clearskin")){
+            sender.sendMessage(mm.deserialize(CWSkins.getInstance().getMessage("noPermission")));
             return true;
         }
 
@@ -30,20 +37,26 @@ public class ClearSkinCommand implements CommandExecutor {
 
         Player player = Bukkit.getPlayer(playerName);
 
-        if (!player.hasPermission("cwskins.clearskin")){
-            player.sendMessage(mm.deserialize(" <gray>|</gray> <red>У вас нет разрешения на эту комманду!</red>"));
-            return true;
+        String displayName = CWSkins.getInstance().getConfig().getString("items.clearSkinItem.name");
+        List<String> lore = CWSkins.getInstance().getConfig().getStringList("items.clearSkinItem.lore");
+        String materialName = CWSkins.getInstance().getConfig().getString("items.clearSkinItem.material");
+
+        Material material = Material.valueOf(materialName);
+
+        ItemStack clearSkinItem = new ItemStack(material);
+        ItemMeta meta = clearSkinItem.getItemMeta();
+
+        if (displayName != null){
+            displayName = ColorTranslate.translateColorCodes(displayName);
+            meta.setDisplayName(displayName);
         }
 
-        List<String> lore = new ArrayList<>();
+        List<String> translatedLore = new ArrayList<>();
+        for (String line : lore) {
+            translatedLore.add(ColorTranslate.translateColorCodes(line));
+        }
 
-        ItemStack clearSkinItem = new ItemStack(Material.CLAY_BALL);
-        ItemMeta meta = clearSkinItem.getItemMeta();
-        meta.setDisplayName("§x§D§1§6§C§1§3Снятие скина");
-        lore.add("");
-        lore.add("§8▪ §fПеретащите этот предмет");
-        lore.add("  §fна скин, чтобы снять его");
-        meta.setLore(lore);
+        meta.setLore(translatedLore);
         meta.getPersistentDataContainer().set(CustomSkin.CLEAR_SKIN_KEY, PersistentDataType.STRING, "clear");
         clearSkinItem.setItemMeta(meta);
 

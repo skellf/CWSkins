@@ -19,14 +19,14 @@ public class CreateSkinCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if (!(sender instanceof Player)){
-            sender.sendMessage("Эта комманда только для игроков!");
+            sender.sendMessage(CWSkins.getInstance().getMessage("commandForPlayers"));
             return true;
         }
 
         Player player = (Player) sender;
 
         if (!player.hasPermission("cwskins.createskin")){
-            player.sendMessage(MiniMessage.miniMessage().deserialize(" <gray>|</gray> <red>У вас нету прав на эту комманду!</red>"));
+            player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("noPermission")));
             return true;
         }
 
@@ -38,7 +38,7 @@ public class CreateSkinCommand implements CommandExecutor {
         ItemStack itemInHand = player.getInventory().getItemInMainHand();
 
         if (itemInHand.getType() == Material.AIR){
-            player.sendMessage(MiniMessage.miniMessage().deserialize(" <gray>|</gray> <red>Вам нужно держать предмет в руке, чтобы создать скин</red>"));
+            player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("createskincommand.noItemInHand")));
             return true;
         }
 
@@ -53,10 +53,10 @@ public class CreateSkinCommand implements CommandExecutor {
 
         try {
             skin.writeToFile(skinFile);
-            player.sendMessage(MiniMessage.miniMessage().deserialize(" <gray>|</gray> <green>Скин успешно сохранен!</green>"));
+            player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("createskincommand.skinSaved")));
         } catch (IOException e){
             e.printStackTrace();
-            player.sendMessage(MiniMessage.miniMessage().deserialize(" <gray>|</gray> <red>Произошло ошибка при сохранении скина.</red>"));
+            player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("errorOccurred")));
         }
 
         return true;

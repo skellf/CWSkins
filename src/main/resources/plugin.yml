@@ -3,24 +3,30 @@ version: '${project.version}'
 main: me.skellf.cwskins.CWSkins
 api-version: '1.20'
 author: skellf
-description: Плагин на скины для сервера CrazyWorld.
+description: Plugin for simple skin support.
 commands:
   clearskin:
     usage: /clearskin
-    description: Комманда для применения скина
+    description: Command for giving clear skin item
   createskin:
-    usage: /createskin <название скина>
-    description: Комманда для создания скина
+    usage: /createskin <skin name>
+    description: Command for creating skin
   giveskin:
-    usage: /giveskin <игрок> <скин>
-    description: Комманда для получения скина
+    usage: /giveskin <player> <skin>
+    description: Command for receiving skins
+  cwskinsreload:
+    usage: /cwskins reload
+    description: Reloads the plugin
 permissions:
   cwskins.clearskin:
     default: op
-    description: Разрещение на комманду clearskin
+    description: Permission for command clearskin
   cwskins.createskin:
     default: op
-    description: Разрешение на комманду createskin
+    description: Permission for command createskin
   cwskins.giveskin:
     default: op
-    description: Разрешение на комманду giveskin
+    description: Permission for command giveskin
+  cwskins.reload:
+    default: op
+    description: Permission for plugin reload

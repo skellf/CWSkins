@@ -1,0 +1,14 @@
+{
+  "commandForPlayers": "This command is only for players!",
+  "createskincommand.noItemInHand": " <gray>|</gray> <red>You need to hold item in hand to create skin</red>",
+  "createskincommand.skinSaved": " <gray>|</gray> <green>Skin saved successfully!</green>",
+  "clearkincommand.noPlayerName": " <gray>|</gray> <red>Enter the player's name!</red>",
+  "giveskincommand.playerNotFound": " <gray>|</gray> <red>Player with name <bold>%s</bold> not found!</red>",
+  "giveskincommand.skinNotFound": " <gray>|</gray> <red>Skin with name <bold>%s</bold> not found!</red>",
+  "giveskincommand.skinGivenSuccessfully": " <gray>|</gray> <green>Skin given successfully!</green>",
+  "skinClear.wait": " <gray>|</gray> <red>Please wait <bold>20</bold> seconds before clearing skin.</red>",
+  "skinApply.wait": " <gray>|</gray> <red>Please wait <bold>5</bold> seconds before applying skin.</red>",
+  "errorOccurred": " <gray>|</gray> <red>An error occurred.</red>",
+  "noPermission": " <gray>|</gray> <red>You don't have permission on this command!</red>",
+  "reloadedPlugin": "<gray>|</gray> <green>Plugin successfully reloaded!</green>"
+}

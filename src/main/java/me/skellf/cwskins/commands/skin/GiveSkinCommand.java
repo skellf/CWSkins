@@ -28,7 +28,7 @@ public class GiveSkinCommand implements CommandExecutor {
         }
 
         if (!sender.hasPermission("cwskins.giveskin")){
-            sender.sendMessage(mm.deserialize(" <gray>|</gray> <red>У вас нету прав на эту комманду!</red>"));
+            sender.sendMessage(mm.deserialize(CWSkins.getInstance().getMessage("noPermission")));
             return true;
         }
 
@@ -37,7 +37,7 @@ public class GiveSkinCommand implements CommandExecutor {
 
         Player player = Bukkit.getPlayer(playerName);
         if (player == null || !player.isOnline()){
-            sender.sendMessage(mm.deserialize(" <gray>|</gray> <red>Игрок с именем <bold>" + playerName + "</bold> не найден!</red>"));
+            sender.sendMessage(mm.deserialize(CWSkins.getInstance().getMessage("giveskincommand.playerNotFound", playerName)));
             return true;
         }
 
@@ -46,12 +46,12 @@ public class GiveSkinCommand implements CommandExecutor {
             skin = CustomSkin.fromFile(CWSkins.getSkinFile(skinName));
         } catch (IOException e){
             e.printStackTrace();
-            sender.sendMessage(mm.deserialize(" <gray>|</gray> <red>Ошибка при получении скина.</red>"));
+            sender.sendMessage(mm.deserialize(CWSkins.getInstance().getMessage("errorOccurred")));
             return true;
         }
 
         if (skin == null){
-            sender.sendMessage(mm.deserialize(" <gray>|</gray> <red>Скин с именем <bold>" + skinName + "</bold> не найден!</red>"));
+            sender.sendMessage(mm.deserialize(CWSkins.getInstance().getMessage("giveskincommand.skinNotFound", skinName)));
             return true;
         }
 
@@ -66,7 +66,7 @@ public class GiveSkinCommand implements CommandExecutor {
 
         player.getInventory().addItem(skinItem);
 
-        sender.sendMessage(mm.deserialize(" <gray>|</gray> <green>Скин был выдан успешно!</green>"));
+        sender.sendMessage(mm.deserialize(CWSkins.getInstance().getMessage("giveskincommand.skinGivenSuccessfully")));
 
         return true;
     }

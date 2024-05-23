@@ -36,7 +36,7 @@ public class ApplySkinListener implements Listener {
                         clearSkin(clickedItem, player, cursorItem);
                         event.setCancelled(true);
                     } else {
-                        player.sendMessage(MiniMessage.miniMessage().deserialize(" <gray>|</gray> <red>Подождите <bold>20</bold> секунд перед очисткой скина.</red>"));
+                        player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("skinClear.wait")));
                     }
                     return;
                 }
@@ -63,7 +63,7 @@ public class ApplySkinListener implements Listener {
                                 applySkin(clickedItem, skin, skinName, player);
                                 event.setCancelled(true);
                             } else {
-                                player.sendMessage(MiniMessage.miniMessage().deserialize(" <gray>|</gray> <red>Подождите <bold>5</bold> секунд перед применением скина.</red>"));
+                                player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("skinApply.wait")));
                                 event.setCancelled(true);
                             }
                         }
@@ -93,7 +93,7 @@ public class ApplySkinListener implements Listener {
                             applySkin(clickedItem, skin, skinName, player);
                             event.setCancelled(true);
                         } else {
-                            player.sendMessage(MiniMessage.miniMessage().deserialize(" <gray>|</gray> <red>Подождите <bold>5</bold> секунд перед применением скина.</red>"));
+                            player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("skinApply.wait")));
                         }
                     }
                 }
