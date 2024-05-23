@@ -34,7 +34,7 @@ If possible, include screenshots or videos of the issue.
 
 ## Additional Context
 <!-- Add any other context about the problem here. -->
-Include any other relevant information, such as error logs or console outputs, and any plugins or mods that might conflict with CWSkins.
+Include any other relevant information, such as error logs or console outputs, screenshots.
 
 ## Logs
 <!-- If possible, attach log files or paste them here. -->
