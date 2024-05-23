@@ -7,8 +7,18 @@ assignees: ''
 
 ---
 
-**Description of your idea**
-Want me to improve my plugin and make it cooler? Consider clearly describe the idea you wanted and i will try to add this feature.
+## Description
+<!-- A clear and concise description of what the idea or feature is. -->
+Describe the feature or enhancement you would like to see in the CWSkins plugin.
 
-**Additional content**
-Some screenshots or something.
+## Rationale
+<!-- Explain why this feature should be added to the plugin. -->
+Provide reasons why this feature would be beneficial and how it could improve the plugin.
+
+## Implementation
+<!-- If possible, provide suggestions on how to implement the feature. -->
+Offer any thoughts on how this feature could be developed or integrated into the plugin.
+
+## Additional Context
+<!-- Add any other context or screenshots about the feature request here. -->
+Include any additional information or context that might help explain your idea better.
