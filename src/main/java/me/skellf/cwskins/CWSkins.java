@@ -10,7 +10,7 @@ import me.skellf.cwskins.commands.skin.GiveSkinCommand;
 import me.skellf.cwskins.listeners.ApplySkinListener;
 import me.skellf.cwskins.listeners.DamageListener;
 import me.skellf.cwskins.listeners.PreventSkinUse;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.mineacademy.fo.plugin.SimplePlugin;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -20,16 +20,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public final class CWSkins extends JavaPlugin {
+public final class CWSkins extends SimplePlugin {
 
     private Map<String, String> messages;
     private Gson gson;
-    private static CWSkins instance;
     private static final Logger log = Logger.getLogger("CWSkins");
 
     @Override
-    public void onEnable() {
-        instance = this;
+    public void onPluginStart() {
         gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()
@@ -50,14 +48,14 @@ public final class CWSkins extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new ApplySkinListener(), this);
         this.getServer().getPluginManager().registerEvents(new DamageListener(), this);
         this.getServer().getPluginManager().registerEvents(new PreventSkinUse(), this);
-        this.getCommand("cwskinsreload").setExecutor(new CWSkinsCommand());
+        this.getCommand("cwskins").setExecutor(new CWSkinsCommand());
         this.getCommand("clearskin").setExecutor(new ClearSkinCommand());
         this.getCommand("giveskin").setExecutor(new GiveSkinCommand());
         this.getCommand("createskin").setExecutor(new CreateSkinCommand());
     }
 
     @Override
-    public void onDisable() {
+    public void onPluginStop() {
         saveSkins();
         log.info("Saving skins...");
     }
@@ -149,6 +147,6 @@ public final class CWSkins extends JavaPlugin {
     }
 
     public static CWSkins getInstance(){
-        return instance;
+        return (CWSkins) SimplePlugin.getInstance();
     }
 }

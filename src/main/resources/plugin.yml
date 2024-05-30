@@ -14,8 +14,8 @@ commands:
   giveskin:
     usage: /giveskin <player> <skin>
     description: Command for receiving skins
-  cwskinsreload:
-    usage: /cwskins reload
+  cwskins:
+    usage: /cwskins <reload> or <menu>
     description: Reloads the plugin
 permissions:
   cwskins.clearskin:
@@ -30,3 +30,6 @@ permissions:
   cwskins.reload:
     default: op
     description: Permission for plugin reload
+  cwskins.menu:
+    default: op
+    description: Permission for open skins menu

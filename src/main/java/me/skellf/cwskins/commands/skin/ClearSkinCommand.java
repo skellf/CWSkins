@@ -5,6 +5,7 @@ import me.skellf.cwskins.CustomSkin;
 import me.skellf.cwskins.util.ColorTranslate;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -52,7 +53,7 @@ public class ClearSkinCommand implements CommandExecutor {
         }
 
         List<String> translatedLore = new ArrayList<>();
-        for (String line : lore) {
+        for (String line : lore){
             translatedLore.add(ColorTranslate.translateColorCodes(line));
         }
 

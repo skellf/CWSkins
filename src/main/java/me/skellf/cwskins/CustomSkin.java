@@ -18,6 +18,7 @@ public class CustomSkin {
     private final List<String> lore;
     private final Material material;
     private final int customModelData;
+    private File skinFile;
     public static final NamespacedKey CUSTOM_SKIN_KEY = new NamespacedKey(CWSkins.getInstance(), "custom-skin");
     public static final NamespacedKey APPLIED_SKIN_KEY = new NamespacedKey(CWSkins.getInstance(), "applied-skin");
     public static final NamespacedKey CLEAR_SKIN_KEY = new NamespacedKey(CWSkins.getInstance(), "clear-skin");
@@ -34,8 +35,20 @@ public class CustomSkin {
         return material;
     }
 
+    public File getSkinFile() {
+        return skinFile;
+    }
+
     public int getCustomModelData() {
         return customModelData;
+    }
+
+    public void setSkinFile(File skinFile) {
+        this.skinFile = skinFile;
+    }
+
+    public String getFileName() {
+        return skinFile != null ? skinFile.getName().replace(".yml", "") : "unknown";
     }
 
     /**
@@ -45,11 +58,12 @@ public class CustomSkin {
      * @param material skin's item material
      * @param customModelData skin's item model data
      */
-    public CustomSkin(String itemName, List<String> lore, Material material, int customModelData) {
+    public CustomSkin(String itemName, List<String> lore, Material material, int customModelData, File skinFile) {
         this.itemName = itemName;
         this.lore = lore;
         this.material = material;
         this.customModelData = customModelData;
+        this.skinFile = skinFile;
     }
 
     /**
@@ -67,7 +81,7 @@ public class CustomSkin {
                 List<String> lore = (List<String>) yamlData.get("lore");
                 Material material = Material.matchMaterial((String) yamlData.get("material"));
                 int customModelData = (int) yamlData.get("customModelData");
-                return new CustomSkin(itemName, lore, material, customModelData);
+                return new CustomSkin(itemName, lore, material, customModelData, file);
             }
         }
 

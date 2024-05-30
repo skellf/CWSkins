@@ -1,5 +1,6 @@
 {
   "commandForPlayers": "This command is only for players!",
+  "createskincommand.noCustomModelData": " <gray>|</gray> <red>Your item don't have CustomModelData!</red>",
   "createskincommand.noItemInHand": " <gray>|</gray> <red>You need to hold item in hand to create skin</red>",
   "createskincommand.skinSaved": " <gray>|</gray> <green>Skin saved successfully!</green>",
   "clearkincommand.noPlayerName": " <gray>|</gray> <red>Enter the player's name!</red>",
@@ -10,5 +11,8 @@
   "skinApply.wait": " <gray>|</gray> <red>Please wait <bold>5</bold> seconds before applying skin.</red>",
   "errorOccurred": " <gray>|</gray> <red>An error occurred.</red>",
   "noPermission": " <gray>|</gray> <red>You don't have permission on this command!</red>",
-  "reloadedPlugin": "<gray>|</gray> <green>Plugin successfully reloaded!</green>"
+  "reloadedPlugin": "<gray>|</gray> <green>Plugin successfully reloaded!</green>",
+  "skins.Menu": "Skins Menu",
+  "skin.notFound": "<red>Skin not found</red>",
+  "unnamedSkin": "Unnamed skin"
 }

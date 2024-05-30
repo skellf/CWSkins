@@ -47,9 +47,13 @@ public class CreateSkinCommand implements CommandExecutor {
         Material material = itemInHand.getType();
         int customModelData = itemInHand.getItemMeta().getCustomModelData();
 
-        CustomSkin skin = new CustomSkin(itemName, lore, material, customModelData);
+        if (customModelData == 0){
+            player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("createskincommand.noCustomModelData")));
+        }
 
         File skinFile = CWSkins.getSkinFile(skinName);
+
+        CustomSkin skin = new CustomSkin(itemName, lore, material, customModelData, skinFile);
 
         try {
             skin.writeToFile(skinFile);
