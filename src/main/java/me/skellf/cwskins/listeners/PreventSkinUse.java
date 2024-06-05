@@ -21,7 +21,7 @@ public class PreventSkinUse implements Listener {
     private void preventSkinUse(PlayerInteractEvent event){
         ItemStack item = event.getItem();
 
-        if (!item.isEmpty() && item.hasItemMeta()) {
+        if (item != null && !item.isEmpty() && item.hasItemMeta()) {
             ItemMeta itemMeta = item.getItemMeta();
             checkSkinAndCancelEvent(itemMeta, event);
         }

@@ -2,10 +2,9 @@ package me.skellf.cwskins.commands.skin;
 
 import me.skellf.cwskins.CWSkins;
 import me.skellf.cwskins.CustomSkin;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import me.skellf.cwskins.commands.SkinCommand;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -15,30 +14,33 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class CreateSkinCommand implements CommandExecutor {
+public class SubCommandCreateSkin extends SkinCommand {
+
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
+    public boolean execute(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+
+        if (!sender.hasPermission("cwskins.createskin")){
+            sender.sendMessage(mm.deserialize(plugin.getMessage("noPermission")));
+            return true;
+        }
+
+
         if (!(sender instanceof Player)){
-            sender.sendMessage(CWSkins.getInstance().getMessage("commandForPlayers"));
+            sender.sendMessage(plugin.getMessage("commandForPlayers"));
             return true;
         }
 
         Player player = (Player) sender;
 
-        if (!player.hasPermission("cwskins.createskin")){
-            player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("noPermission")));
-            return true;
-        }
-
-        if (args.length != 1){
+        if (args.length != 2){
             return false;
         }
 
-        String skinName = args[0];
+        String skinName = args[1];
         ItemStack itemInHand = player.getInventory().getItemInMainHand();
 
         if (itemInHand.getType() == Material.AIR){
-            player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("createskincommand.noItemInHand")));
+            player.sendMessage(mm.deserialize(plugin.getMessage("createskincommand.noItemInHand")));
             return true;
         }
 
@@ -48,7 +50,7 @@ public class CreateSkinCommand implements CommandExecutor {
         int customModelData = itemInHand.getItemMeta().getCustomModelData();
 
         if (customModelData == 0){
-            player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("createskincommand.noCustomModelData")));
+            player.sendMessage(mm.deserialize(plugin.getMessage("createskincommand.noCustomModelData")));
         }
 
         File skinFile = CWSkins.getSkinFile(skinName);
@@ -57,10 +59,10 @@ public class CreateSkinCommand implements CommandExecutor {
 
         try {
             skin.writeToFile(skinFile);
-            player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("createskincommand.skinSaved")));
+            player.sendMessage(mm.deserialize(plugin.getMessage("createskincommand.skinSaved")));
         } catch (IOException e){
             e.printStackTrace();
-            player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("errorOccurred")));
+            player.sendMessage(mm.deserialize(plugin.getMessage("errorOccurred")));
         }
 
         return true;

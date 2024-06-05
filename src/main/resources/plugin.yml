@@ -5,31 +5,26 @@ api-version: '1.20'
 author: skellf
 description: Plugin for simple skin support.
 commands:
-  clearskin:
-    usage: /clearskin
-    description: Command for giving clear skin item
-  createskin:
-    usage: /createskin <skin name>
-    description: Command for creating skin
-  giveskin:
-    usage: /giveskin <player> <skin>
-    description: Command for receiving skins
   cwskins:
-    usage: /cwskins <reload> or <menu>
-    description: Reloads the plugin
+    usage: /cwskins <reload|menu|give|clear|create>
+    description: Main command of plugin
+    aliases: cws
 permissions:
   cwskins.clearskin:
     default: op
-    description: Permission for command clearskin
+    description: Permission for giving clear skin item
   cwskins.createskin:
     default: op
-    description: Permission for command createskin
+    description: Permission for creating skin
   cwskins.giveskin:
     default: op
-    description: Permission for command giveskin
+    description: Permission for giving skin
   cwskins.reload:
     default: op
     description: Permission for plugin reload
   cwskins.menu:
     default: op
     description: Permission for open skins menu
+  cwskins.removeskin:
+    default: op
+    description: Permission for removing skin

@@ -1,6 +1,7 @@
 package me.skellf.cwskins;
 
 import me.skellf.cwskins.util.ColorTranslate;
+import me.skellf.cwskins.util.HandleSkinItem;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,7 +10,11 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.mineacademy.fo.menu.Menu;
 import org.mineacademy.fo.menu.MenuPagged;
+import org.mineacademy.fo.menu.button.Button;
+import org.mineacademy.fo.menu.model.ItemCreator;
+import org.mineacademy.fo.remain.CompMaterial;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,10 +24,7 @@ import java.util.List;
 public class SkinsMenu extends MenuPagged<CustomSkin> {
 
     public SkinsMenu() {
-        super(calculateInventorySize(getAllSkins().size()), getAllSkins());
-        this.addInfoButton();
-        this.addPageNumbers();
-        this.addReturnButton();
+        super(45, getAllSkins());
 
         this.setTitle(CWSkins.getInstance().getMessage("skins.Menu"));
     }
@@ -43,11 +45,6 @@ public class SkinsMenu extends MenuPagged<CustomSkin> {
             }
         }
         return skins;
-    }
-
-    private static int calculateInventorySize(int itemCount) {
-        int size = ((itemCount / 9) + 1) * 9;
-        return size > 54 ? 54 : size;
     }
 
     @Override
@@ -86,24 +83,99 @@ public class SkinsMenu extends MenuPagged<CustomSkin> {
         File skinFile = new File(CWSkins.getInstance().getDataFolder(), "skins/" + skinFileName + ".yml");
         CustomSkin skin = CustomSkin.fromFile(skinFile);
         if (skin == null) {
-            player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("skin.notFound")));
+            player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("skins.Menu.notFound")));
             return;
         }
 
-        Material material = skin.getMaterial() != null ? skin.getMaterial() : Material.BARRIER;
-        ItemStack skinItem = new ItemStack(material);
-        ItemMeta meta = skinItem.getItemMeta();
-        if (meta != null) {
-            meta.setDisplayName(skin.getItemName());
-            meta.setCustomModelData(skin.getCustomModelData());
-            meta.setLore(skin.getLore());
-            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-            meta.getPersistentDataContainer().set(CustomSkin.CUSTOM_SKIN_KEY, PersistentDataType.STRING, skinFileName);
-            skinItem.setItemMeta(meta);
+        ItemStack skinItem = null;
+        try {
+            skinItem = HandleSkinItem.createSkinItem(skinFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (skinItem == null){
+            return;
         }
 
         player.getInventory().addItem(skinItem);
         player.updateInventory();
+    }
+
+
+    @Override
+    protected boolean canShowPreviousButton(){
+        return getCurrentPage() > 1;
+    }
+
+    @Override
+    protected boolean canShowNextButton() {
+        return getCurrentPage() < getPages().size();
+    }
+
+    @Override
+    protected int getPreviousButtonPosition() {
+        return this.getSize() - 9 + 3;
+    }
+
+    @Override
+    protected int getNextButtonPosition() {
+        return this.getSize() - 9 + 5;
+    }
+
+    @Override
+    public Button formPreviousButton(){
+        if (getCurrentPage() <= 1) {
+            return Button.makeEmpty();
+        }
+
+        return new Button() {
+            @Override
+            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+                setCurrentPage(Math.max(getCurrentPage() - 1, 1));
+            }
+
+            @Override
+            public ItemStack getItem() {
+
+                ItemCreator item = ItemCreator.of(CompMaterial.valueOf(CWSkins.getInstance().getConfig().getString("menu.backButton.material")))
+                        .name(CWSkins.getInstance().getConfig().getString("menu.backButton.displayName"));
+
+                int customModelData = CWSkins.getInstance().getConfig().getInt("menu.backButton.customModelData", -1);
+                if (customModelData != -1){
+                    item.modelData(customModelData);
+                }
+
+                return item.make();
+            }
+        };
+    }
+
+    @Override
+    public Button formNextButton() {
+        if (getCurrentPage() >= getPages().size()) {
+            return Button.makeEmpty();
+        }
+
+        return new Button() {
+            @Override
+            public void onClickedInMenu(Player player, Menu menu, ClickType click) {
+                setCurrentPage(Math.min(getCurrentPage() + 1, getPages().size()));
+            }
+
+            @Override
+            public ItemStack getItem() {
+                ItemCreator item = ItemCreator.of(CompMaterial.valueOf(CWSkins.getInstance().getConfig().getString("menu.nextButton.material")))
+                        .name(CWSkins.getInstance().getConfig().getString("menu.nextButton.displayName"));
+
+                int customModelData = CWSkins.getInstance().getConfig().getInt("menu.nextButton.customModelData", -1);
+                if (customModelData != -1){
+                    item.modelData(customModelData);
+                }
+
+                return item.make();
+            }
+        };
     }
 }
 

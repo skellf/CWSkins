@@ -3,10 +3,8 @@ package me.skellf.cwskins;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import me.skellf.cwskins.commands.CWSkinsCommand;
-import me.skellf.cwskins.commands.skin.ClearSkinCommand;
-import me.skellf.cwskins.commands.skin.CreateSkinCommand;
-import me.skellf.cwskins.commands.skin.GiveSkinCommand;
+import me.skellf.cwskins.commands.CommandDispatcher;
+import me.skellf.cwskins.commands.tabcomplete.SkinTabCompleter;
 import me.skellf.cwskins.listeners.ApplySkinListener;
 import me.skellf.cwskins.listeners.DamageListener;
 import me.skellf.cwskins.listeners.PreventSkinUse;
@@ -44,14 +42,12 @@ public final class CWSkins extends SimplePlugin {
         this.reloadConfig();
         this.createMessagesFile();
         this.loadMessages();
-        log.info("Developer: " + getDescription().getAuthors() + " version: " + getDescription().getVersion());
+        log.info("Developer: " + getDescription().getAuthors() + ", version: " + getDescription().getVersion());
         this.getServer().getPluginManager().registerEvents(new ApplySkinListener(), this);
         this.getServer().getPluginManager().registerEvents(new DamageListener(), this);
         this.getServer().getPluginManager().registerEvents(new PreventSkinUse(), this);
-        this.getCommand("cwskins").setExecutor(new CWSkinsCommand());
-        this.getCommand("clearskin").setExecutor(new ClearSkinCommand());
-        this.getCommand("giveskin").setExecutor(new GiveSkinCommand());
-        this.getCommand("createskin").setExecutor(new CreateSkinCommand());
+        this.getCommand("cwskins").setExecutor(new CommandDispatcher(this));
+        this.getCommand("cwskins").setTabCompleter(new SkinTabCompleter());
     }
 
     @Override
