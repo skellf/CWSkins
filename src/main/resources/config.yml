@@ -5,6 +5,11 @@
 #| \__/\  /\  /\__/ /   <| | | | \__ \
 # \____/\/  \/\____/|_|\_\_|_| |_|___/
 
+
+# All messages can be configured in messages.json file.
+# Config supports only color codes, locale file supports only MiniMessage format.
+# Multiple color support will be in future versions.
+
 items:
   clearSkinItem:
     material: "CLAY_BALL"
@@ -13,3 +18,13 @@ items:
       - ""
       - "&8▪ &fDrag this item on skin"
       - "  &fto clear it"
+
+menu:
+  nextButton:
+    displayName: "&aNext Page"
+    customModelData: 10006 # Set this to -1 for disabling
+    material: PAPER
+  backButton:
+    displayName : "&aPrevious Page"
+    customModelData: 10005
+    material: PAPER

@@ -1,14 +1,21 @@
 {
   "commandForPlayers": "This command is only for players!",
+  "createskincommand.noCustomModelData": " <gray>|</gray> <red>Your item don't have CustomModelData!</red>",
   "createskincommand.noItemInHand": " <gray>|</gray> <red>You need to hold item in hand to create skin</red>",
   "createskincommand.skinSaved": " <gray>|</gray> <green>Skin saved successfully!</green>",
-  "clearkincommand.noPlayerName": " <gray>|</gray> <red>Enter the player's name!</red>",
-  "giveskincommand.playerNotFound": " <gray>|</gray> <red>Player with name <bold>%s</bold> not found!</red>",
-  "giveskincommand.skinNotFound": " <gray>|</gray> <red>Skin with name <bold>%s</bold> not found!</red>",
-  "giveskincommand.skinGivenSuccessfully": " <gray>|</gray> <green>Skin given successfully!</green>",
+  "successfullyRemovedSkin": " <gray>|</gray> <green>Skin removed successfully!</green>",
+  "skinGivenSuccessfully": " <gray>|</gray> <green>Skin given successfully!</green>",
+  "onlyInSurvival": " <gray>|</gray> <red>Sorry, but you can apply or clear a skin only in Survival mode!</red>",
   "skinClear.wait": " <gray>|</gray> <red>Please wait <bold>20</bold> seconds before clearing skin.</red>",
   "skinApply.wait": " <gray>|</gray> <red>Please wait <bold>5</bold> seconds before applying skin.</red>",
   "errorOccurred": " <gray>|</gray> <red>An error occurred.</red>",
+  "insufficientArguments": " <gray>|</gray> <red>Insufficient arguments!</red>",
+  "unknownArgument": " <gray>|</gray> <red>Unknown argument</red>",
+  "playerNotFound": " <gray>|</gray> <red>Player with name <bold>%s</bold> not found!</red>",
   "noPermission": " <gray>|</gray> <red>You don't have permission on this command!</red>",
-  "reloadedPlugin": "<gray>|</gray> <green>Plugin successfully reloaded!</green>"
+  "skinNotFound": " <gray>|</gray> <red>Skin with name <bold>%s</bold> not found!</red>",
+  "reloadedPlugin": "<gray>|</gray> <green>Plugin successfully reloaded!</green>",
+  "skins.Menu": "Skins Menu",
+  "skins.Menu.notFound": "<red>Skin not found</red>",
+  "unnamedSkin": "Unnamed skin"
 }

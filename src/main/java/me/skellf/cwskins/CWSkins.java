@@ -3,14 +3,13 @@ package me.skellf.cwskins;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import me.skellf.cwskins.commands.CWSkinsCommand;
-import me.skellf.cwskins.commands.skin.ClearSkinCommand;
-import me.skellf.cwskins.commands.skin.CreateSkinCommand;
-import me.skellf.cwskins.commands.skin.GiveSkinCommand;
+import me.skellf.cwskins.commands.CommandDispatcher;
+import me.skellf.cwskins.commands.tabcomplete.SkinTabCompleter;
 import me.skellf.cwskins.listeners.ApplySkinListener;
 import me.skellf.cwskins.listeners.DamageListener;
 import me.skellf.cwskins.listeners.PreventSkinUse;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.Bukkit;
+import org.mineacademy.fo.plugin.SimplePlugin;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -20,20 +19,35 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public final class CWSkins extends JavaPlugin {
+public final class CWSkins extends SimplePlugin {
 
     private Map<String, String> messages;
     private Gson gson;
-    private static CWSkins instance;
     private static final Logger log = Logger.getLogger("CWSkins");
 
     @Override
-    public void onEnable() {
-        instance = this;
+    public void onPluginStart() {
+        log.info("\n" + " _______           _______  _       _________ _        _______ \n" +
+                "(  ____ \\|\\     /|(  ____ \\| \\    /\\\\__   __/( (    /|(  ____ \\\n" +
+                "| (    \\/| )   ( || (    \\/|  \\  / /   ) (   |  \\  ( || (    \\/\n" +
+                "| |      | | _ | || (_____ |  (_/ /    | |   |   \\ | || (_____ \n" +
+                "| |      | |( )| |(_____  )|   _ (     | |   | (\\ \\) |(_____  )\n" +
+                "| |      | || || |      ) ||  ( \\ \\    | |   | | \\   |      ) |\n" +
+                "| (____/\\| () () |/\\____) ||  /  \\ \\___) (___| )  \\  |/\\____) |\n" +
+                "(_______/(_______)\\_______)|_/    \\/\\_______/|/    )_)\\_______)" +
+                "\n");
+
         gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()
                 .create();
+
+        String mcVersion = Bukkit.getMinecraftVersion();
+
+        if (Integer.parseInt(mcVersion.replace(".", "")) < 116){
+            log.severe("Running unsupported Minecraft version!");
+            Bukkit.getPluginManager().disablePlugin(this);
+        }
 
         File skinsFolder = new File(getDataFolder(), "skins");
         if (!skinsFolder.exists()){
@@ -44,22 +58,22 @@ public final class CWSkins extends JavaPlugin {
         this.getConfig().options().copyDefaults();
         this.saveDefaultConfig();
         this.reloadConfig();
+        this.saveConfig();
         this.createMessagesFile();
         this.loadMessages();
-        log.info("Developer: " + getDescription().getAuthors() + " version: " + getDescription().getVersion());
+        log.info("Developer: " + getDescription().getAuthors() + ", version: " + getDescription().getVersion());
         this.getServer().getPluginManager().registerEvents(new ApplySkinListener(), this);
         this.getServer().getPluginManager().registerEvents(new DamageListener(), this);
         this.getServer().getPluginManager().registerEvents(new PreventSkinUse(), this);
-        this.getCommand("cwskinsreload").setExecutor(new CWSkinsCommand());
-        this.getCommand("clearskin").setExecutor(new ClearSkinCommand());
-        this.getCommand("giveskin").setExecutor(new GiveSkinCommand());
-        this.getCommand("createskin").setExecutor(new CreateSkinCommand());
+        this.getCommand("cwskins").setExecutor(new CommandDispatcher());
+        this.getCommand("cwskins").setTabCompleter(new SkinTabCompleter());
     }
 
     @Override
-    public void onDisable() {
+    public void onPluginStop() {
         saveSkins();
         log.info("Saving skins...");
+        log.info("Goodbye!");
     }
 
     private void createMessagesFile() {
@@ -149,6 +163,6 @@ public final class CWSkins extends JavaPlugin {
     }
 
     public static CWSkins getInstance(){
-        return instance;
+        return (CWSkins) SimplePlugin.getInstance();
     }
 }
