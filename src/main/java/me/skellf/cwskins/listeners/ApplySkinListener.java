@@ -3,6 +3,7 @@ package me.skellf.cwskins.listeners;
 import me.skellf.cwskins.CWSkins;
 import me.skellf.cwskins.CustomSkin;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -30,13 +31,17 @@ public class ApplySkinListener implements Listener {
             if (cursorMeta != null && cursorMeta.getPersistentDataContainer().has(CustomSkin.CLEAR_SKIN_KEY, PersistentDataType.STRING)) {
                 if (!clickedItem.getItemMeta().getPersistentDataContainer().has(CustomSkin.CUSTOM_SKIN_KEY, PersistentDataType.STRING) && clickedItem.getItemMeta().getPersistentDataContainer().has(CustomSkin.APPLIED_SKIN_KEY)) {
                     Player player = (Player) event.getWhoClicked();
-                    long lastClearTime = lastSkinClearTime.getOrDefault(player.getUniqueId(), 0L);
-                    long currentTime = System.currentTimeMillis();
-                    if (currentTime - lastClearTime >= 20000) {
-                        clearSkin(clickedItem, player, cursorItem);
-                        event.setCancelled(true);
+                    if (player.getGameMode() != GameMode.CREATIVE){
+                        long lastClearTime = lastSkinClearTime.getOrDefault(player.getUniqueId(), 0L);
+                        long currentTime = System.currentTimeMillis();
+                        if (currentTime - lastClearTime >= 20000) {
+                            clearSkin(clickedItem, player, cursorItem);
+                            event.setCancelled(true);
+                        } else {
+                            player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("skinClear.wait")));
+                        }
                     } else {
-                        player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("skinClear.wait")));
+                        player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("onlyInSurvival")));
                     }
                     return;
                 }
@@ -56,15 +61,19 @@ public class ApplySkinListener implements Listener {
                     Player player = (Player) event.getWhoClicked();
                     if (!clickedItem.getItemMeta().getPersistentDataContainer().has(CustomSkin.APPLIED_SKIN_KEY, PersistentDataType.STRING) && !clickedItem.getItemMeta().getPersistentDataContainer().has(CustomSkin.CLEAR_SKIN_KEY)) {
                         if (clickedItem.getType() == skin.getMaterial() && !clickedItem.getItemMeta().getPersistentDataContainer().has(CustomSkin.CUSTOM_SKIN_KEY, PersistentDataType.STRING)) {
-                            UUID playerId = event.getWhoClicked().getUniqueId();
-                            long lastApplyTime = lastSkinApplyTime.getOrDefault(playerId, 0L);
-                            long currentTime = System.currentTimeMillis();
-                            if (currentTime - lastApplyTime >= 5000) {
-                                applySkin(clickedItem, skin, skinName, player);
-                                event.setCancelled(true);
+                            if (player.getGameMode() != GameMode.CREATIVE) {
+                                UUID playerId = event.getWhoClicked().getUniqueId();
+                                long lastApplyTime = lastSkinApplyTime.getOrDefault(playerId, 0L);
+                                long currentTime = System.currentTimeMillis();
+                                if (currentTime - lastApplyTime >= 5000) {
+                                    applySkin(clickedItem, skin, skinName, player);
+                                    event.setCancelled(true);
+                                } else {
+                                    player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("skinApply.wait")));
+                                    event.setCancelled(true);
+                                }
                             } else {
-                                player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("skinApply.wait")));
-                                event.setCancelled(true);
+                                player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("onlyInSurvival")));
                             }
                         }
                     }
@@ -86,14 +95,18 @@ public class ApplySkinListener implements Listener {
                 if (skin != null && skinName != null) {
                     Player player = (Player) event.getWhoClicked();
                     if (!clickedItem.getItemMeta().getPersistentDataContainer().has(CustomSkin.APPLIED_SKIN_KEY, PersistentDataType.STRING)) {
-                        UUID playerId = event.getWhoClicked().getUniqueId();
-                        long lastApplyTime = lastSkinApplyTime.getOrDefault(playerId, 0L);
-                        long currentTime = System.currentTimeMillis();
-                        if (currentTime - lastApplyTime >= 5000) {
-                            applySkin(clickedItem, skin, skinName, player);
-                            event.setCancelled(true);
+                        if (player.getGameMode() != GameMode.CREATIVE){
+                            UUID playerId = event.getWhoClicked().getUniqueId();
+                            long lastApplyTime = lastSkinApplyTime.getOrDefault(playerId, 0L);
+                            long currentTime = System.currentTimeMillis();
+                            if (currentTime - lastApplyTime >= 5000) {
+                                applySkin(clickedItem, skin, skinName, player);
+                                event.setCancelled(true);
+                            } else {
+                                player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("skinApply.wait")));
+                            }
                         } else {
-                            player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("skinApply.wait")));
+                            player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("onlyInSurvival")));
                         }
                     }
                 }

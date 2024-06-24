@@ -34,7 +34,7 @@ public class SubCommandRemoveSkin extends SkinCommand {
 
         try {
             if (skinFile.delete()){
-                sender.sendMessage(mm.deserialize(plugin.getMessage("removeskincommand.successfullyRemovedSkin")));
+                sender.sendMessage(mm.deserialize(plugin.getMessage("successfullyRemovedSkin")));
             } else {
                 throw new IOException("Failed to delete the skin file.");
             }

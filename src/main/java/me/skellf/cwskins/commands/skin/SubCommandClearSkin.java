@@ -2,7 +2,7 @@ package me.skellf.cwskins.commands.skin;
 
 import me.skellf.cwskins.CustomSkin;
 import me.skellf.cwskins.commands.SkinCommand;
-import me.skellf.cwskins.util.ColorTranslate;
+import me.skellf.cwskins.util.Colorizer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -50,13 +50,13 @@ public class SubCommandClearSkin extends SkinCommand {
         ItemMeta meta = clearSkinItem.getItemMeta();
 
         if (displayName != null){
-            displayName = ColorTranslate.translateColorCodes(displayName);
+            displayName = Colorizer.translateColorCodes(displayName);
             meta.setDisplayName(displayName);
         }
 
         List<String> translatedLore = new ArrayList<>();
         for (String line : lore){
-            translatedLore.add(ColorTranslate.translateColorCodes(line));
+            translatedLore.add(Colorizer.translateColorCodes(line));
         }
 
         meta.setLore(translatedLore);

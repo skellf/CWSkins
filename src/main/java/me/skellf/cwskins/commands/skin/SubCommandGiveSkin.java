@@ -45,20 +45,10 @@ public class SubCommandGiveSkin extends SkinCommand {
             return true;
         }
 
-        CustomSkin skin;
-        try {
-            skin = CustomSkin.fromFile(skinFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-            sender.sendMessage(mm.deserialize(plugin.getMessage("errorOccurred")));
-            return true;
-        }
-
-
         try {
             ItemStack skinItem = HandleSkinItem.createSkinItem(skinFile);
             player.getInventory().addItem(skinItem);
-            sender.sendMessage(mm.deserialize(CWSkins.getInstance().getMessage("giveskincommand.skinGivenSuccessfully", skinName)));
+            sender.sendMessage(mm.deserialize(CWSkins.getInstance().getMessage("skinGivenSuccessfully")));
         } catch (IOException e) {
             e.printStackTrace();
             sender.sendMessage(mm.deserialize(CWSkins.getInstance().getMessage("errorOccurred")));

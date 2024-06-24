@@ -8,6 +8,7 @@ import me.skellf.cwskins.commands.tabcomplete.SkinTabCompleter;
 import me.skellf.cwskins.listeners.ApplySkinListener;
 import me.skellf.cwskins.listeners.DamageListener;
 import me.skellf.cwskins.listeners.PreventSkinUse;
+import org.bukkit.Bukkit;
 import org.mineacademy.fo.plugin.SimplePlugin;
 
 import java.io.*;
@@ -26,10 +27,27 @@ public final class CWSkins extends SimplePlugin {
 
     @Override
     public void onPluginStart() {
+        log.info("\n" + " _______           _______  _       _________ _        _______ \n" +
+                "(  ____ \\|\\     /|(  ____ \\| \\    /\\\\__   __/( (    /|(  ____ \\\n" +
+                "| (    \\/| )   ( || (    \\/|  \\  / /   ) (   |  \\  ( || (    \\/\n" +
+                "| |      | | _ | || (_____ |  (_/ /    | |   |   \\ | || (_____ \n" +
+                "| |      | |( )| |(_____  )|   _ (     | |   | (\\ \\) |(_____  )\n" +
+                "| |      | || || |      ) ||  ( \\ \\    | |   | | \\   |      ) |\n" +
+                "| (____/\\| () () |/\\____) ||  /  \\ \\___) (___| )  \\  |/\\____) |\n" +
+                "(_______/(_______)\\_______)|_/    \\/\\_______/|/    )_)\\_______)" +
+                "\n");
+
         gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()
                 .create();
+
+        String mcVersion = Bukkit.getMinecraftVersion();
+
+        if (Integer.parseInt(mcVersion.replace(".", "")) < 116){
+            log.severe("Running unsupported Minecraft version!");
+            Bukkit.getPluginManager().disablePlugin(this);
+        }
 
         File skinsFolder = new File(getDataFolder(), "skins");
         if (!skinsFolder.exists()){
@@ -40,13 +58,14 @@ public final class CWSkins extends SimplePlugin {
         this.getConfig().options().copyDefaults();
         this.saveDefaultConfig();
         this.reloadConfig();
+        this.saveConfig();
         this.createMessagesFile();
         this.loadMessages();
         log.info("Developer: " + getDescription().getAuthors() + ", version: " + getDescription().getVersion());
         this.getServer().getPluginManager().registerEvents(new ApplySkinListener(), this);
         this.getServer().getPluginManager().registerEvents(new DamageListener(), this);
         this.getServer().getPluginManager().registerEvents(new PreventSkinUse(), this);
-        this.getCommand("cwskins").setExecutor(new CommandDispatcher(this));
+        this.getCommand("cwskins").setExecutor(new CommandDispatcher());
         this.getCommand("cwskins").setTabCompleter(new SkinTabCompleter());
     }
 
@@ -54,6 +73,7 @@ public final class CWSkins extends SimplePlugin {
     public void onPluginStop() {
         saveSkins();
         log.info("Saving skins...");
+        log.info("Goodbye!");
     }
 
     private void createMessagesFile() {

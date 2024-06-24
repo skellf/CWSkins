@@ -11,9 +11,11 @@ import java.util.List;
 
 public class SkinTabCompleter implements TabCompleter {
     private final List<String> subCommands;
+    private final List<String> skins;
 
     public SkinTabCompleter() {
         subCommands = new ArrayList<>();
+        skins = new ArrayList<>();
         subCommands.add("menu");
         subCommands.add("reload");
         subCommands.add("give");
@@ -27,6 +29,11 @@ public class SkinTabCompleter implements TabCompleter {
         if (args.length == 1) {
             return subCommands;
         }
+
+        if (args[1].equalsIgnoreCase("give")){
+
+        }
+
         return null;
     }
 }

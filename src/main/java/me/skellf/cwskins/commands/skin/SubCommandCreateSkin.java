@@ -39,8 +39,13 @@ public class SubCommandCreateSkin extends SkinCommand {
         String skinName = args[1];
         ItemStack itemInHand = player.getInventory().getItemInMainHand();
 
-        if (itemInHand.getType() == Material.AIR){
+        if (itemInHand.getType().isEmpty()){
             player.sendMessage(mm.deserialize(plugin.getMessage("createskincommand.noItemInHand")));
+            return true;
+        }
+
+        if (!itemInHand.getItemMeta().hasCustomModelData()){
+            player.sendMessage(mm.deserialize(plugin.getMessage("createskincommand.noCustomModelData")));
             return true;
         }
 
@@ -48,10 +53,6 @@ public class SubCommandCreateSkin extends SkinCommand {
         List<String> lore = itemInHand.getItemMeta().getLore();
         Material material = itemInHand.getType();
         int customModelData = itemInHand.getItemMeta().getCustomModelData();
-
-        if (customModelData == 0){
-            player.sendMessage(mm.deserialize(plugin.getMessage("createskincommand.noCustomModelData")));
-        }
 
         File skinFile = CWSkins.getSkinFile(skinName);
 

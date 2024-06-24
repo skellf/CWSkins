@@ -18,7 +18,7 @@ public class CommandDispatcher implements CommandExecutor {
 
     private final Map<String, SkinCommand> subCommands = new HashMap<>();
 
-    public CommandDispatcher(CWSkins plugin){
+    public CommandDispatcher(){
         subCommands.put("reload", new SubCommandReload());
         subCommands.put("menu", new SubCommandMenu());
         subCommands.put("clear", new SubCommandClearSkin());

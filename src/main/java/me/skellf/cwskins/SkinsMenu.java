@@ -1,6 +1,6 @@
 package me.skellf.cwskins;
 
-import me.skellf.cwskins.util.ColorTranslate;
+import me.skellf.cwskins.util.Colorizer;
 import me.skellf.cwskins.util.HandleSkinItem;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
@@ -53,7 +53,10 @@ public class SkinsMenu extends MenuPagged<CustomSkin> {
         String itemName = skin.getItemName() != null ? skin.getItemName() : CWSkins.getInstance().getMessage("unnamedSkin");
         List<String> lore = new ArrayList<>(skin.getLore() != null ? skin.getLore() : new ArrayList<>());
         lore.add("");
-        lore.add(ColorTranslate.translateColorCodes("&e" + skin.getSkinFile().getName()));
+        lore.add(Colorizer.translateColorCodes("&a >> Left click to receive item"));
+        lore.add(Colorizer.translateColorCodes("&a >> Right click to &cdelete&r"));
+        lore.add("");
+        lore.add(Colorizer.translateColorCodes("&e" + skin.getSkinFile().getName()));
         int customModelData = skin.getCustomModelData();
 
         ItemStack item = new ItemStack(material);
@@ -71,16 +74,24 @@ public class SkinsMenu extends MenuPagged<CustomSkin> {
 
     @Override
     protected void onPageClick(Player player, CustomSkin skin, ClickType click) {
-        try {
-            giveSkinToPlayer(player, skin.getSkinFile().getName().replace(".yml", ""));
-        } catch (IOException e) {
-            e.printStackTrace();
-            player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("errorOccurred")));
+        String skinName = skin.getFileName();
+
+        if (click.isRightClick()) {
+            removeSkin(player, skinName);
+            redrawButtons();
+        } else if (click.isLeftClick()) {
+            try {
+                giveSkinToPlayer(player, skinName);
+            } catch (IOException e) {
+                e.printStackTrace();
+                player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("errorOccurred")));
+            }
+
         }
     }
 
-    private void giveSkinToPlayer(Player player, String skinFileName) throws IOException {
-        File skinFile = new File(CWSkins.getInstance().getDataFolder(), "skins/" + skinFileName + ".yml");
+    private void giveSkinToPlayer(Player player, String skinName) throws IOException {
+        File skinFile = CWSkins.getSkinFile(skinName);
         CustomSkin skin = CustomSkin.fromFile(skinFile);
         if (skin == null) {
             player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("skins.Menu.notFound")));
@@ -98,8 +109,16 @@ public class SkinsMenu extends MenuPagged<CustomSkin> {
             return;
         }
 
+        player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("skinGivenSuccessfully")));
         player.getInventory().addItem(skinItem);
         player.updateInventory();
+    }
+
+    private void removeSkin(Player player, String skinName) {
+        File skinFile = CWSkins.getSkinFile(skinName);
+        if (skinFile.delete()) {
+            player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("successfullyRemovedSkin")));
+        }
     }
 
 
