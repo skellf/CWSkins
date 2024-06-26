@@ -10,21 +10,25 @@ commands:
     description: Main command of plugin
     aliases: cws
 permissions:
-  cwskins.clearskin:
+  cwskins.*:
+    description: Grants permission for all commands
     default: op
+    children:
+      cwskins.clearskin: true
+      cwskins.createskin: true
+      cwskins.giveskin: true
+      cwskins.reload: true
+      cwskins.menu: true
+      cwskins.removeskin: true
+  cwskins.clearskin:
     description: Permission for giving clear skin item
   cwskins.createskin:
-    default: op
     description: Permission for creating skin
   cwskins.giveskin:
-    default: op
     description: Permission for giving skin
   cwskins.reload:
-    default: op
     description: Permission for plugin reload
   cwskins.menu:
-    default: op
     description: Permission for open skins menu
   cwskins.removeskin:
-    default: op
     description: Permission for removing skin

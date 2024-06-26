@@ -15,7 +15,9 @@ import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -164,5 +166,23 @@ public final class CWSkins extends SimplePlugin {
 
     public static CWSkins getInstance(){
         return (CWSkins) SimplePlugin.getInstance();
+    }
+
+    public static List<CustomSkin> getAllSkins() {
+        List<CustomSkin> skins = new ArrayList<>();
+        File skinsFolder = new File(CWSkins.getInstance().getDataFolder(), "skins");
+        if (skinsFolder.exists() && skinsFolder.isDirectory()) {
+            for (File skinFile : skinsFolder.listFiles()) {
+                try {
+                    CustomSkin skin = CustomSkin.fromFile(skinFile);
+                    if (skin != null) {
+                        skins.add(skin);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return skins;
     }
 }

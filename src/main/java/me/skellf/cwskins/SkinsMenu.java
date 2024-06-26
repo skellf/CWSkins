@@ -24,27 +24,9 @@ import java.util.List;
 public class SkinsMenu extends MenuPagged<CustomSkin> {
 
     public SkinsMenu() {
-        super(45, getAllSkins());
+        super(45, CWSkins.getAllSkins());
 
         this.setTitle(CWSkins.getInstance().getMessage("skins.Menu"));
-    }
-
-    private static List<CustomSkin> getAllSkins() {
-        List<CustomSkin> skins = new ArrayList<>();
-        File skinsFolder = new File(CWSkins.getInstance().getDataFolder(), "skins");
-        if (skinsFolder.exists() && skinsFolder.isDirectory()) {
-            for (File skinFile : skinsFolder.listFiles()) {
-                try {
-                    CustomSkin skin = CustomSkin.fromFile(skinFile);
-                    if (skin != null) {
-                        skins.add(skin);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return skins;
     }
 
     @Override
@@ -91,6 +73,12 @@ public class SkinsMenu extends MenuPagged<CustomSkin> {
     }
 
     private void giveSkinToPlayer(Player player, String skinName) throws IOException {
+
+        if (!player.hasPermission("cwskins.giveskin")){
+            player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("noPermission")));
+            return;
+        }
+
         File skinFile = CWSkins.getSkinFile(skinName);
         CustomSkin skin = CustomSkin.fromFile(skinFile);
         if (skin == null) {
@@ -115,6 +103,12 @@ public class SkinsMenu extends MenuPagged<CustomSkin> {
     }
 
     private void removeSkin(Player player, String skinName) {
+
+        if (!player.hasPermission("cwskins.reload")){
+            player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("noPermission")));
+            return;
+        }
+
         File skinFile = CWSkins.getSkinFile(skinName);
         if (skinFile.delete()) {
             player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("successfullyRemovedSkin")));
