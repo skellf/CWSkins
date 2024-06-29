@@ -6,7 +6,7 @@
 
   <groupId>me.skellf</groupId>
   <artifactId>CWSkins</artifactId>
-  <version>3.3</version>
+  <version>3.3.1</version>
   <packaging>jar</packaging>
 
   <name>CWSkins</name>
@@ -102,6 +102,11 @@
                   <artifactId>datafixerupper</artifactId>
               </exclusion>
           </exclusions>
+      </dependency>
+      <dependency>
+          <groupId>org.json</groupId>
+          <artifactId>json</artifactId>
+          <version>20240303</version>
       </dependency>
   </dependencies>
 </project>

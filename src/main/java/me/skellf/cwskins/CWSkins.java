@@ -8,13 +8,17 @@ import me.skellf.cwskins.commands.tabcomplete.SkinTabCompleter;
 import me.skellf.cwskins.listeners.ApplySkinListener;
 import me.skellf.cwskins.listeners.DamageListener;
 import me.skellf.cwskins.listeners.PreventSkinUse;
+import me.skellf.cwskins.util.VersionChecker;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.mineacademy.fo.plugin.SimplePlugin;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +28,7 @@ import java.util.logging.Logger;
 public final class CWSkins extends SimplePlugin {
 
     private Map<String, String> messages;
+    private static final String VERSION = "v3.3.1";
     private Gson gson;
     private static final Logger log = Logger.getLogger("CWSkins");
 
@@ -46,8 +51,12 @@ public final class CWSkins extends SimplePlugin {
 
         String mcVersion = Bukkit.getMinecraftVersion();
 
-        if (Integer.parseInt(mcVersion.replace(".", "")) < 116){
-            log.severe("Running unsupported Minecraft version!");
+        String[] versionParts = mcVersion.split("\\.");
+
+        String versionNumber = versionParts[0] + versionParts[1] + (versionParts.length > 2 ? versionParts[2] : "0");
+
+        if (Integer.parseInt(versionNumber) < 116) {
+            getLogger().severe("Running unsupported Minecraft version!");
             Bukkit.getPluginManager().disablePlugin(this);
         }
 
@@ -57,13 +66,18 @@ public final class CWSkins extends SimplePlugin {
             log.info("Folder with skins is created!");
         }
 
+        log.info("Developer: skellf, version: " + VERSION);
+
         this.getConfig().options().copyDefaults();
         this.saveDefaultConfig();
-        this.reloadConfig();
-        this.saveConfig();
+        this.updateConfig();
+
+        if (getConfig().getBoolean("check-for-updates")){
+            checkForUpdates();
+        }
+
         this.createMessagesFile();
         this.loadMessages();
-        log.info("Developer: " + getDescription().getAuthors() + ", version: " + getDescription().getVersion());
         this.getServer().getPluginManager().registerEvents(new ApplySkinListener(), this);
         this.getServer().getPluginManager().registerEvents(new DamageListener(), this);
         this.getServer().getPluginManager().registerEvents(new PreventSkinUse(), this);
@@ -132,6 +146,53 @@ public final class CWSkins extends SimplePlugin {
     public String getMessage(String key, Object... args){
         String message = messages.getOrDefault(key, "Message not found");
         return String.format(message, args);
+    }
+
+    private void checkForUpdates(){
+        new Thread(() -> {
+            try {
+                VersionChecker.ReleaseInfo releaseInfo = VersionChecker.getLatestVersion("skellf", "CWSkins");
+                String latestVersion = releaseInfo.getVersion();
+                String downloadUrl = releaseInfo.getDownloadUrl();
+
+                if (!VERSION.equals(latestVersion)) {
+                    log.warning("A new version of the plugin is available: " + latestVersion + ". You are running version: " + VERSION);
+                    log.warning("Get new version here: " + downloadUrl);
+                } else {
+                    log.info("You are running the latest version of the plugin.");
+                }
+            } catch (Exception e) {
+                log.warning("Failed to check for updates: " + e.getLocalizedMessage());
+            }
+        }).start();
+    }
+
+    private void updateConfig(){
+        String configFileName = "config.yml";
+        File configFile = new File(this.getDataFolder(), configFileName);
+        if (!configFile.exists()) {
+            saveResource(configFileName, false);
+        }
+
+        FileConfiguration currentConfig = YamlConfiguration.loadConfiguration(configFile);
+
+        try (InputStream defaultConfigStream = getResource(configFileName)) {
+            if (defaultConfigStream != null) {
+                File tempFile = File.createTempFile("defaultConfig", ".yml");
+                Files.copy(defaultConfigStream, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                FileConfiguration defaultConfig = YamlConfiguration.loadConfiguration(tempFile);
+
+                for (String key : defaultConfig.getKeys(true)) {
+                    if (!currentConfig.contains(key)) {
+                        currentConfig.set(key, defaultConfig.get(key));
+                    }
+                }
+
+                tempFile.delete();
+            }
+        } catch (IOException e) {
+            log.severe("Unable to update config file: " + e.getLocalizedMessage());
+        }
     }
 
     private void saveSkins(){

@@ -10,6 +10,8 @@
 # Config supports only color codes, locale file supports only MiniMessage format.
 # Multiple color support will be in future versions.
 
+check-for-updates: true
+
 items:
   clearSkinItem:
     material: "CLAY_BALL"
