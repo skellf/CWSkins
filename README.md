@@ -12,7 +12,7 @@ Minecraft plugin for simple skin support
 | ---- | --------------- | ---------- | ------- |
 | `cwskins` | Main command | none | Subcommands |
 | `cwskins create` | Creates a skin | `cwskins.createskin` | Skin name |
-| `cwskins give` | Gives existing skin | `cwskins.giveskin` | Skin name |
+| `cwskins give` | Gives existing skin | `cwskins.giveskin` | Player name, Skin name |
 | `cwskins clear` | Gives clear skin item to player | `cwskins.clearskin` | Player name |
 | `cwskins reload` | Reloads the plugin | `cwskins.reload` | none |
 | `cwskins menu` | Opens a menu with all existing skins | `cwskins.menu` | none |
