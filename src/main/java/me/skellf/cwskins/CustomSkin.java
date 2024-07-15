@@ -5,10 +5,8 @@ import org.bukkit.NamespacedKey;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,7 +72,7 @@ public class CustomSkin {
      */
     public static CustomSkin fromFile(File file) throws IOException{
         Yaml yaml = new Yaml();
-        try (FileReader reader = new FileReader(file)){
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)){
             Map<String, Object> yamlData = yaml.load(reader);
             if (yamlData != null) {
                 String itemName = (String) yamlData.get("itemName");
@@ -98,7 +96,7 @@ public class CustomSkin {
         DumperOptions options = new DumperOptions();
         options.setPrettyFlow(true);
         yaml = new Yaml(options);
-        try (FileWriter writer = new FileWriter(file)){
+        try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
             yaml.dump(getDataMap(), writer);
         }
     }
