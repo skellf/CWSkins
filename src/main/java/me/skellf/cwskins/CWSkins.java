@@ -34,15 +34,18 @@ public final class CWSkins extends SimplePlugin {
 
     @Override
     public void onPluginStart() {
-        log.info("\n" + " _______           _______  _       _________ _        _______ \n" +
-                "(  ____ \\|\\     /|(  ____ \\| \\    /\\\\__   __/( (    /|(  ____ \\\n" +
-                "| (    \\/| )   ( || (    \\/|  \\  / /   ) (   |  \\  ( || (    \\/\n" +
-                "| |      | | _ | || (_____ |  (_/ /    | |   |   \\ | || (_____ \n" +
-                "| |      | |( )| |(_____  )|   _ (     | |   | (\\ \\) |(_____  )\n" +
-                "| |      | || || |      ) ||  ( \\ \\    | |   | | \\   |      ) |\n" +
-                "| (____/\\| () () |/\\____) ||  /  \\ \\___) (___| )  \\  |/\\____) |\n" +
-                "(_______/(_______)\\_______)|_/    \\/\\_______/|/    )_)\\_______)" +
-                "\n");
+        log.info("""
+
+                 _______           _______  _       _________ _        _______\s
+                (  ____ \\|\\     /|(  ____ \\| \\    /\\\\__   __/( (    /|(  ____ \\
+                | (    \\/| )   ( || (    \\/|  \\  / /   ) (   |  \\  ( || (    \\/
+                | |      | | _ | || (_____ |  (_/ /    | |   |   \\ | || (_____\s
+                | |      | |( )| |(_____  )|   _ (     | |   | (\\ \\) |(_____  )
+                | |      | || || |      ) ||  ( \\ \\    | |   | | \\   |      ) |
+                | (____/\\| () () |/\\____) ||  /  \\ \\___) (___| )  \\  |/\\____) |
+                (_______/(_______)\\_______)|_/    \\/\\_______/|/    )_)\\_______)\
+
+                """);
 
         gson = new GsonBuilder()
                 .setPrettyPrinting()
@@ -68,9 +71,8 @@ public final class CWSkins extends SimplePlugin {
 
         log.info("Developer: skellf, version: " + VERSION);
 
-        this.getConfig().options().copyDefaults();
         this.saveDefaultConfig();
-        this.updateConfig();
+        this.saveConfig();
 
         if (getConfig().getBoolean("check-for-updates")){
             checkForUpdates();
@@ -165,34 +167,6 @@ public final class CWSkins extends SimplePlugin {
                 log.warning("Failed to check for updates: " + e.getLocalizedMessage());
             }
         }).start();
-    }
-
-    private void updateConfig(){
-        String configFileName = "config.yml";
-        File configFile = new File(this.getDataFolder(), configFileName);
-        if (!configFile.exists()) {
-            saveResource(configFileName, false);
-        }
-
-        FileConfiguration currentConfig = YamlConfiguration.loadConfiguration(configFile);
-
-        try (InputStream defaultConfigStream = getResource(configFileName)) {
-            if (defaultConfigStream != null) {
-                File tempFile = File.createTempFile("defaultConfig", ".yml");
-                Files.copy(defaultConfigStream, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                FileConfiguration defaultConfig = YamlConfiguration.loadConfiguration(tempFile);
-
-                for (String key : defaultConfig.getKeys(true)) {
-                    if (!currentConfig.contains(key)) {
-                        currentConfig.set(key, defaultConfig.get(key));
-                    }
-                }
-
-                tempFile.delete();
-            }
-        } catch (IOException e) {
-            log.severe("Unable to update config file: " + e.getLocalizedMessage());
-        }
     }
 
     private void saveSkins(){
