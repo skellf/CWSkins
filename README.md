@@ -21,4 +21,4 @@ Minecraft plugin for simple skin support
 To gain access to all commands use `cwskins.*`
 
 ## Version
-This plugin should work fine on verisons from `1.16` to `1.21`
+This plugin should work fine on verisons from `1.16` to `1.21` with Java 11 or above.
