@@ -10,15 +10,12 @@ import me.skellf.cwskins.listeners.DamageListener;
 import me.skellf.cwskins.listeners.PreventSkinUse;
 import me.skellf.cwskins.util.VersionChecker;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.mineacademy.fo.plugin.SimplePlugin;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,18 +31,15 @@ public final class CWSkins extends SimplePlugin {
 
     @Override
     public void onPluginStart() {
-        log.info("""
-
-                 _______           _______  _       _________ _        _______\s
-                (  ____ \\|\\     /|(  ____ \\| \\    /\\\\__   __/( (    /|(  ____ \\
-                | (    \\/| )   ( || (    \\/|  \\  / /   ) (   |  \\  ( || (    \\/
-                | |      | | _ | || (_____ |  (_/ /    | |   |   \\ | || (_____\s
-                | |      | |( )| |(_____  )|   _ (     | |   | (\\ \\) |(_____  )
-                | |      | || || |      ) ||  ( \\ \\    | |   | | \\   |      ) |
-                | (____/\\| () () |/\\____) ||  /  \\ \\___) (___| )  \\  |/\\____) |
-                (_______/(_______)\\_______)|_/    \\/\\_______/|/    )_)\\_______)\
-
-                """);
+        log.info("\n" + " _______           _______  _       _________ _        _______ \n" +
+                "(  ____ \\|\\     /|(  ____ \\| \\    /\\\\__   __/( (    /|(  ____ \\\n" +
+                "| (    \\/| )   ( || (    \\/|  \\  / /   ) (   |  \\  ( || (    \\/\n" +
+                "| |      | | _ | || (_____ |  (_/ /    | |   |   \\ | || (_____ \n" +
+                "| |      | |( )| |(_____  )|   _ (     | |   | (\\ \\) |(_____  )\n" +
+                "| |      | || || |      ) ||  ( \\ \\    | |   | | \\   |      ) |\n" +
+                "| (____/\\| () () |/\\____) ||  /  \\ \\___) (___| )  \\  |/\\____) |\n" +
+                "(_______/(_______)\\_______)|_/    \\/\\_______/|/    )_)\\_______)" +
+                "\n");
 
         gson = new GsonBuilder()
                 .setPrettyPrinting()
