@@ -59,7 +59,7 @@ public class ApplySkinListener implements Listener {
 
                 if (skin != null && skinName != null) {
                     Player player = (Player) event.getWhoClicked();
-                    if (!clickedItem.getItemMeta().getPersistentDataContainer().has(CustomSkin.APPLIED_SKIN_KEY, PersistentDataType.STRING) && !clickedItem.getItemMeta().getPersistentDataContainer().has(CustomSkin.CLEAR_SKIN_KEY)) {
+                    if (!clickedItem.getItemMeta().getPersistentDataContainer().has(CustomSkin.APPLIED_SKIN_KEY, PersistentDataType.STRING) && !clickedItem.getItemMeta().getPersistentDataContainer().has(CustomSkin.CLEAR_SKIN_KEY, PersistentDataType.STRING)) {
                         if (clickedItem.getType() == skin.getMaterial() && !clickedItem.getItemMeta().getPersistentDataContainer().has(CustomSkin.CUSTOM_SKIN_KEY, PersistentDataType.STRING)) {
                             if (player.getGameMode() != GameMode.CREATIVE) {
                                 UUID playerId = event.getWhoClicked().getUniqueId();

@@ -6,8 +6,10 @@ import com.google.gson.GsonBuilder;
 import me.skellf.cwskins.commands.CommandDispatcher;
 import me.skellf.cwskins.commands.tabcomplete.SkinTabCompleter;
 import me.skellf.cwskins.listeners.ApplySkinListener;
-import me.skellf.cwskins.listeners.DamageListener;
-import me.skellf.cwskins.listeners.PreventSkinUse;
+import me.skellf.cwskins.listeners.restrictions.DamageListener;
+import me.skellf.cwskins.listeners.restrictions.PreventAnvilUse;
+import me.skellf.cwskins.listeners.restrictions.PreventEnchantSkin;
+import me.skellf.cwskins.listeners.restrictions.PreventSkinUse;
 import me.skellf.cwskins.util.VersionChecker;
 import org.bukkit.Bukkit;
 import org.mineacademy.fo.plugin.SimplePlugin;
@@ -25,7 +27,7 @@ import java.util.logging.Logger;
 public final class CWSkins extends SimplePlugin {
 
     private Map<String, String> messages;
-    private static final String VERSION = "v3.3.1";
+    private static final String VERSION = "v3.3.2";
     private Gson gson;
     private static final Logger log = Logger.getLogger("CWSkins");
 
@@ -75,8 +77,18 @@ public final class CWSkins extends SimplePlugin {
         this.createMessagesFile();
         this.loadMessages();
         this.getServer().getPluginManager().registerEvents(new ApplySkinListener(), this);
-        this.getServer().getPluginManager().registerEvents(new DamageListener(), this);
-        this.getServer().getPluginManager().registerEvents(new PreventSkinUse(), this);
+        if (getConfig().getBoolean("restrictions.prevent-skin-from-using")) {
+            this.getServer().getPluginManager().registerEvents(new PreventSkinUse(), this);
+        }
+        if (getConfig().getBoolean("restrictions.prevent-skin-from-enchanting")) {
+            this.getServer().getPluginManager().registerEvents(new PreventEnchantSkin(), this);
+        }
+        if (getConfig().getBoolean("restrictions.prevent-skin-from-anvil")) {
+            this.getServer().getPluginManager().registerEvents(new PreventAnvilUse(), this);
+        }
+        if (getConfig().getBoolean("restrictions.prevent-damage-from-skin")) {
+            this.getServer().getPluginManager().registerEvents(new DamageListener(), this);
+        }
         this.getCommand("cwskins").setExecutor(new CommandDispatcher());
         this.getCommand("cwskins").setTabCompleter(new SkinTabCompleter());
     }

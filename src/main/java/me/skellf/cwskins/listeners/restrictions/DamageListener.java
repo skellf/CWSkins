@@ -1,4 +1,4 @@
-package me.skellf.cwskins.listeners;
+package me.skellf.cwskins.listeners.restrictions;
 
 import me.skellf.cwskins.CWSkins;
 import me.skellf.cwskins.CustomSkin;
@@ -20,7 +20,7 @@ public class DamageListener implements Listener {
             Player player = (Player) event.getDamager();
             ItemStack item = player.getInventory().getItemInMainHand();
 
-            if (!item.isEmpty() && item.hasItemMeta()) {
+            if (!item.getType().isAir() && item.hasItemMeta()) {
                 ItemMeta itemMeta = item.getItemMeta();
 
                 if (itemMeta.getPersistentDataContainer().has(CustomSkin.CUSTOM_SKIN_KEY, PersistentDataType.STRING)) {

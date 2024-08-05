@@ -14,7 +14,7 @@
   "playerNotFound": " <gray>|</gray> <red>Player with name <bold>%s</bold> not found!</red>",
   "noPermission": " <gray>|</gray> <red>You don't have permission on this command!</red>",
   "skinNotFound": " <gray>|</gray> <red>Skin with name <bold>%s</bold> not found!</red>",
-  "reloadedPlugin": "<gray>|</gray> <green>Plugin successfully reloaded!</green>",
+  "reloadedPlugin": " <gray>|</gray> <green>Plugin successfully reloaded!</green>",
   "skins.Menu": "Skins Menu",
   "skins.Menu.notFound": "<red>Skin not found</red>",
   "unnamedSkin": "Unnamed skin"

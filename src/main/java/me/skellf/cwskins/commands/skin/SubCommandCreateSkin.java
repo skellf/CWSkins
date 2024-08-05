@@ -39,7 +39,7 @@ public class SubCommandCreateSkin extends SkinCommand {
         String skinName = args[1];
         ItemStack itemInHand = player.getInventory().getItemInMainHand();
 
-        if (itemInHand.getType().isEmpty()){
+        if (itemInHand.getType().isAir()){
             player.sendMessage(mm.deserialize(plugin.getMessage("createskincommand.noItemInHand")));
             return true;
         }

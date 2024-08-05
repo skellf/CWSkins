@@ -30,3 +30,11 @@ menu:
     displayName : "&aPrevious Page"
     customModelData: 10005
     material: PAPER
+
+# Prevents skin from using.
+# Needs to restart server.
+restrictions:
+  prevent-skin-from-using: true
+  prevent-skin-from-enchanting: true
+  prevent-skin-from-anvil: true
+  prevent-damage-from-skin: true
