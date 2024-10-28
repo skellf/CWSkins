@@ -46,8 +46,7 @@ public class SubCommandGiveSkin extends SkinCommand {
         }
 
         try {
-            ItemStack skinItem = HandleSkinItem.createSkinItem(skinFile);
-            player.getInventory().addItem(skinItem);
+            HandleSkinItem.giveSkinItem(skinFile, player);
             sender.sendMessage(mm.deserialize(CWSkins.getInstance().getMessage("skinGivenSuccessfully")));
         } catch (IOException e) {
             e.printStackTrace();

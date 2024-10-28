@@ -6,7 +6,7 @@
 
   <groupId>me.skellf</groupId>
   <artifactId>CWSkins</artifactId>
-  <version>3.3.2</version>
+  <version>3.3.3</version>
   <packaging>jar</packaging>
 
   <name>CWSkins</name>

@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 public final class CWSkins extends SimplePlugin {
 
     private Map<String, String> messages;
-    private static final String VERSION = "v3.3.2";
+    private static final String VERSION = "v3.3.3";
     private Gson gson;
     private static final Logger log = Logger.getLogger("CWSkins");
 
@@ -69,6 +69,7 @@ public final class CWSkins extends SimplePlugin {
 
         this.saveDefaultConfig();
         this.saveConfig();
+        this.validateConfig();
 
         if (getConfig().getBoolean("check-for-updates")){
             checkForUpdates();
@@ -154,6 +155,88 @@ public final class CWSkins extends SimplePlugin {
     public String getMessage(String key, Object... args){
         String message = messages.getOrDefault(key, "Message not found");
         return String.format(message, args);
+    }
+
+    public void validateConfig() {
+        if (!getConfig().isBoolean("check-for-updates")) {
+            getConfig().set("check-for-updates", true);
+            log.warning("Added missing check-for-updates with default value: true");
+        }
+
+        validateItems();
+        createDefaultMenuButton("menu.nextButton", "&aNext Page", "ARROW");
+        createDefaultMenuButton("menu.backButton", "&cPrevious Page", "ARROW");
+        validateRestrictions();
+
+        saveConfig();
+    }
+
+    private void validateItems() {
+        String path = "items.clearSkinItem";
+        boolean changed = false;
+
+        if (!getConfig().isSet(path + ".material")) {
+            getConfig().set(path + ".material", "CLAY_BALL");
+            changed = true;
+        }
+
+        if (!getConfig().isSet(path + ".name")) {
+            getConfig().set(path + ".name", "&#d16c13Skin clear");
+            changed = true;
+        }
+
+        if (!getConfig().isSet(path + ".lore")) {
+            getConfig().set(path + ".lore", List.of(
+                    "",
+                    "&8▪ &fDrag this item on skin",
+                    "  &fto clear it"
+            ));
+            changed = true;
+        }
+
+        if (changed) {
+            log.warning("Added missing clearSkinItem values");
+        }
+    }
+
+    private void createDefaultMenuButton(String path, String defaultName, String defaultMaterial) {
+        boolean changed = false;
+
+        if (!getConfig().isSet(path + ".displayName")) {
+            getConfig().set(path + ".displayName", defaultName);
+            changed = true;
+        }
+
+        if (!getConfig().isSet(path + ".material")) {
+            getConfig().set(path + ".material", defaultMaterial);
+            changed = true;
+        }
+
+        if (!getConfig().isSet(path + ".customModelData")) {
+            getConfig().set(path + ".customModelData", -1);
+            changed = true;
+        }
+
+        if (changed) {
+            log.warning("Added " + path + " default values");
+        }
+    }
+
+    private void validateRestrictions() {
+        Map<String, Boolean> defaultRestrictions = Map.of(
+                "prevent-skin-from-using", true,
+                "prevent-skin-from-enchanting", true,
+                "prevent-skin-from-anvil", true,
+                "prevent-damage-from-skin", true
+        );
+
+        defaultRestrictions.forEach((restriction, defaultValue) -> {
+            String path = "restrictions." + restriction;
+            if (!getConfig().isSet(path)) {
+                getConfig().set(path, defaultValue);
+                log.warning("Added missing " + restriction + " with default value: " + defaultValue);
+            }
+        });
     }
 
     private void checkForUpdates(){

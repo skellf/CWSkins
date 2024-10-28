@@ -37,6 +37,7 @@ public class SkinsMenu extends MenuPagged<CustomSkin> {
         lore.add("");
         lore.add(Colorizer.translateColorCodes("&a >> Left click to receive item"));
         lore.add(Colorizer.translateColorCodes("&a >> Right click to &cdelete&r"));
+        lore.add(Colorizer.translateColorCodes("&fCustomModelData: &e" + skin.getCustomModelData()));
         lore.add("");
         lore.add(Colorizer.translateColorCodes("&e" + skin.getSkinFile().getName()));
         int customModelData = skin.getCustomModelData();
@@ -86,20 +87,13 @@ public class SkinsMenu extends MenuPagged<CustomSkin> {
             return;
         }
 
-        ItemStack skinItem = null;
         try {
-            skinItem = HandleSkinItem.createSkinItem(skinFile);
+            HandleSkinItem.giveSkinItem(skinFile, player);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        if (skinItem == null){
-            return;
-        }
-
         player.sendMessage(MiniMessage.miniMessage().deserialize(CWSkins.getInstance().getMessage("skinGivenSuccessfully")));
-        player.getInventory().addItem(skinItem);
-        player.updateInventory();
     }
 
     private void removeSkin(Player player, String skinName) {

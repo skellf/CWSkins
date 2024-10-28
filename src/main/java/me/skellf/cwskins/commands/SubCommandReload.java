@@ -15,6 +15,7 @@ public class SubCommandReload extends SkinCommand {
 
         plugin.loadMessages();
         plugin.reloadConfig();
+        plugin.validateConfig();
         sender.sendMessage(mm.deserialize(plugin.getMessage("reloadedPlugin")));
         return true;
     }

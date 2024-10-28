@@ -27,7 +27,7 @@ menu:
     customModelData: 10006 # Set this to -1 for disabling
     material: PAPER
   backButton:
-    displayName : "&aPrevious Page"
+    displayName : "&cPrevious Page"
     customModelData: 10005
     material: PAPER
 

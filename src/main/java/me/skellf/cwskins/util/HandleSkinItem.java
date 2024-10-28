@@ -1,6 +1,7 @@
 package me.skellf.cwskins.util;
 
 import me.skellf.cwskins.CustomSkin;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -32,5 +33,16 @@ public class HandleSkinItem {
         }
 
         return skinItem;
+    }
+
+    public static void giveSkinItem(File skinFile, Player player) throws IOException {
+        ItemStack skinItem = createSkinItem(skinFile);
+
+        if (player.getInventory().firstEmpty() == -1) {
+            player.getWorld().dropItem(player.getLocation(), skinItem);
+            return;
+        }
+
+        player.getInventory().addItem(skinItem);
     }
 }
