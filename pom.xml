@@ -6,7 +6,7 @@
 
   <groupId>me.skellf</groupId>
   <artifactId>CWSkins</artifactId>
-  <version>3.3.3</version>
+  <version>3.3.4</version>
   <packaging>jar</packaging>
 
   <name>CWSkins</name>
@@ -79,7 +79,7 @@
       <dependency>
           <groupId>com.github.kangarko</groupId>
           <artifactId>Foundation</artifactId>
-          <version>6.7.14</version>
+          <version>6.9.17</version>
           <exclusions>
               <exclusion>
                   <groupId>org.mineacademy.plugin</groupId>
